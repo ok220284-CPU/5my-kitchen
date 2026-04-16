@@ -24,8 +24,19 @@
 #tipsBanner .tip-close{font-size:18px;opacity:.5;padding:4px 8px;flex-shrink:0}
 #tipsBanner .tip-close:active{opacity:1}
 #tipsBanner b{font-weight:700}
+
+#noStockMode:checked+span{background:#d4380d}
+#noStockMode:checked+span+span{left:24px}
+.no-stock-hint{background:#fff8e1;border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:#8b4513;line-height:1.6}
 </style></head><body><header><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><h1>🍲 うちのキッチン</h1><div class="sub">家の食材から、今日の一品を</div></div><button onclick="quickSuggest()" class="omakase-btn">🎲 おまかせ</button></div></header><div id="alertBanner"></div>
-<div id="tipsBanner" style="display:none"></div><nav class="tabs"><button data-tab="stock" class="active"><span class="ic">📦</span>食材</button><button data-tab="cook"><span class="ic">🍳</span>料理</button><button data-tab="shop"><span class="ic">🛒</span>買い物</button><button data-tab="fav"><span class="ic">⭐</span>お気に入り</button><button data-tab="set"><span class="ic">⚙️</span>設定</button></nav><main><section id="tab-stock"><div class="card"><h2><span class="ic">➕</span>食材を追加</h2><div class="cat-tabs" id="catTabs"></div><div class="preset-grid" id="presetGrid"></div><div class="manual-input"><input type="text" id="manualName" placeholder="その他の食材を入力"><button class="sub" onclick="addManual()">追加</button></div></div><div class="card"><h2><span class="ic">📋</span>今ある食材 <span id="stockCount" class="cnt"></span></h2><div class="mb10"><select id="filterCat" onchange="renderStock()" class="fld" style="padding:8px"><option value="">すべてのカテゴリ</option></select></div><div id="stockList"></div></div></section><section id="tab-cook" style="display:none"><div class="sub-tabs"><button class="cook-sub active" data-sub="suggest">🍳 提案</button><button class="cook-sub" data-sub="byIng">📦 食材で</button><button class="cook-sub" data-sub="byMood">🎯 気分で</button><button class="cook-sub" data-sub="browse">🍽 レシピ集</button><button class="cook-sub" data-sub="plan">🗓 献立</button></div><div id="cook-suggest"><div class="card"><h2><span class="ic">🍳</span>今ある食材で作れる料理</h2><p class="hint mb10">登録済み食材からGemini AIが提案します。</p><div class="two-col mb10"><div><label class="flabel">食事区分</label><select id="cookMeal" class="fld"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option></select></div><div><label class="flabel">品数</label><select id="cookDishes" class="fld"><option value="1">1品</option><option value="2">2品</option><option value="3">3品</option><option value="4">4品</option><option value="5">5品</option></select></div></div><select id="cookMood" class="fld mb10"><option value="おまかせ">おまかせ</option><option value="時短(15分以内)">時短(15分以内)</option><option value="和食">和食</option><option value="洋食">洋食</option><option value="中華">中華</option><option value="ヘルシー">ヘルシー</option><option value="がっつり">がっつり</option><option value="一品料理">一品料理</option></select><label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:12px;cursor:pointer"><input type="checkbox" id="priorityExpiry" checked class="cbx-sm">
+<div id="tipsBanner" style="display:none"></div><nav class="tabs"><button data-tab="stock" class="active"><span class="ic">📦</span>食材</button><button data-tab="cook"><span class="ic">🍳</span>料理</button><button data-tab="shop"><span class="ic">🛒</span>買い物</button><button data-tab="fav"><span class="ic">⭐</span>お気に入り</button><button data-tab="set"><span class="ic">⚙️</span>設定</button></nav><main><section id="tab-stock"><div id="noStockToggle" style="background:#fff3ec;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:13px;font-weight:600;color:#8b4513">🍽 食材なしで使う</div>
+<label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer">
+<input type="checkbox" id="noStockMode" onchange="toggleNoStockMode()" style="opacity:0;width:0;height:0">
+<span style="position:absolute;inset:0;background:#ccc;border-radius:13px;transition:.3s"></span>
+<span id="noStockSlider" style="position:absolute;left:2px;top:2px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.3s"></span>
+</label>
+</div><div id="stockCards"><div class="card"><h2><span class="ic">➕</span>食材を追加</h2><div class="cat-tabs" id="catTabs"></div><div class="preset-grid" id="presetGrid"></div><div class="manual-input"><input type="text" id="manualName" placeholder="その他の食材を入力"><button class="sub" onclick="addManual()">追加</button></div></div><div class="card"><h2><span class="ic">📋</span>今ある食材 <span id="stockCount" class="cnt"></span></h2><div class="mb10"><select id="filterCat" onchange="renderStock()" class="fld" style="padding:8px"><option value="">すべてのカテゴリ</option></select></div><div id="stockList"></div></div></div></section><section id="tab-cook" style="display:none"><div class="sub-tabs"><button class="cook-sub active" data-sub="suggest">🍳 提案</button><button class="cook-sub" data-sub="byIng">📦 食材で</button><button class="cook-sub" data-sub="byMood">🎯 気分で</button><button class="cook-sub" data-sub="browse">🍽 レシピ集</button><button class="cook-sub" data-sub="plan">🗓 献立</button></div><div id="cook-suggest"><div class="card"><h2><span class="ic">🍳</span>今ある食材で作れる料理</h2><p class="hint mb10">登録済み食材からGemini AIが提案します。</p><div class="two-col mb10"><div><label class="flabel">食事区分</label><select id="cookMeal" class="fld"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option></select></div><div><label class="flabel">品数</label><select id="cookDishes" class="fld"><option value="1">1品</option><option value="2">2品</option><option value="3">3品</option><option value="4">4品</option><option value="5">5品</option></select></div></div><select id="cookMood" class="fld mb10"><option value="おまかせ">おまかせ</option><option value="時短(15分以内)">時短(15分以内)</option><option value="和食">和食</option><option value="洋食">洋食</option><option value="中華">中華</option><option value="ヘルシー">ヘルシー</option><option value="がっつり">がっつり</option><option value="一品料理">一品料理</option></select><label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:12px;cursor:pointer"><input type="checkbox" id="priorityExpiry" checked class="cbx-sm">
 賞味期限が近い/残量少ない食材を優先
 </label><button class="primary" onclick="suggestRecipes(this)">🍲 料理を提案してもらう</button>
 <button class="sub fw mt8" onclick="offlineSuggestDirect(this)">⚡ 内蔵レシピから提案</button></div><div id="cookResult"></div></div><div id="cook-byIng" style="display:none">
@@ -82,7 +93,8 @@ mealPattern:{breakfast:2,lunch:1,dinner:3},
 allergies:"",
 mealPlan:{},
 userPresets:{},
-hiddenPresets:[]
+hiddenPresets:[],
+noStockMode:false
 };
 let pendingAdd = {};
 let pendingUse = {};
@@ -851,6 +863,40 @@ document.getElementById("mealLunch").value = state.mealPattern.lunch;
 document.getElementById("mealDinner").value = state.mealPattern.dinner;
 document.getElementById("allergyInput").value = state.allergies||"";
 }
+
+// === 食材なしモード ===
+function toggleNoStockMode(){
+const on = document.getElementById("noStockMode").checked;
+state.noStockMode = on;
+save();
+const cards = document.getElementById("stockCards");
+if(on){
+cards.style.display="none";
+// ヒント表示
+let hint = document.getElementById("noStockHint");
+if(!hint){
+hint = document.createElement("div");
+hint.id="noStockHint";
+hint.className="no-stock-hint";
+document.getElementById("noStockToggle").after(hint);
+}
+const hasApi = !!state.apiKey;
+hint.innerHTML = hasApi
+? '✅ <b>AI+内蔵レシピ</b>で提案します<br>📦 食材タブは非表示中。レシピ集・気分検索・おまかせが使えます。'
+: '⚡ <b>内蔵レシピ100品</b>から提案します<br>🔑 APIキーを設定するとAI提案も使えます。<br>📦 食材タブは非表示中。';
+}else{
+cards.style.display="";
+const hint = document.getElementById("noStockHint");
+if(hint)hint.remove();
+}
+}
+function initNoStockMode(){
+if(state.noStockMode){
+document.getElementById("noStockMode").checked=true;
+toggleNoStockMode();
+}
+}
+
 function initCookTab(){
 const meal = detectMealFromTime();
 document.getElementById("cookMeal").value = meal;
@@ -1395,6 +1441,7 @@ renderStock();
 checkAlerts();
 
 loadFamilyUI();
+initNoStockMode();
 initCookTab();
 if(state.apiKey)document.getElementById("apiKey").placeholder = "登録済み(変更時のみ入力)";
 
