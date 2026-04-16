@@ -2147,7 +2147,7 @@ function renderSeasonalSection() {
   data.veg.forEach((v, i) => {
     const inStock = state.stock.some(s => s.name.includes(v) || v.includes(s.name));
     if(i > 0) html += `<span class="sep"> </span>`;
-    html += `<span class="seasonal-tag${inStock ? ' have' : ''}" onclick="showSeasonalIngMenu('${v}')">${v}${inStock ? ' ✓' : ''}</span>`;
+    html += `<span class="seasonal-tag${inStock ? ' have' : ''}" onclick="showSeasonalIngMenu('${v}')">${v}</span>`;
   });
   html += `</div></div>`;
 
@@ -2164,7 +2164,7 @@ function renderSeasonalSection() {
   data.fish.forEach((v, i) => {
     const inStock = state.stock.some(s => s.name.includes(v) || v.includes(s.name));
     if(i > 0) html += `<span class="sep"> </span>`;
-    html += `<span class="seasonal-tag fish${inStock ? ' have' : ''}" onclick="showSeasonalIngMenu('${v}')">${v}${inStock ? ' ✓' : ''}</span>`;
+    html += `<span class="seasonal-tag fish${inStock ? ' have' : ''}" onclick="showSeasonalIngMenu('${v}')">${v}</span>`;
   });
   html += `</div></div>`;
 
