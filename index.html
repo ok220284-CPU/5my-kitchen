@@ -2098,40 +2098,40 @@ function renderBrowseRecipes(recipes, title) {
 
 // === お知らせTipsローテーション ===
 const APP_TIPS = [
-  // --- 朝の時間帯 (5-11時) - 黄系 ---
-  {hour:[5,11], icon:"☀️", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
+  // --- 朝の時間帯 (2-10時) - 黄系 ---
+  {hour:[2,10], icon:"☀️", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
    text:"おはようございます！<b>「🍳 提案」タブ</b>で朝食にぴったりの料理を提案します。", tab:"cook", sub:"suggest"},
-  {hour:[5,11], icon:"🌿", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
+  {hour:[2,10], icon:"🌿", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
    text:"<b>「🛒 買い物」タブ</b>の上部に今月の旬＆お得情報！食材タップでレシピや買い物リストに追加できます。", tab:"shop"},
-  {hour:[5,11], icon:"🎲", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
+  {hour:[2,10], icon:"🎲", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
    text:"朝から悩まない！<b>「🎯 気分で」タブ</b>の🎲ランダム3品でサクッと決められます。", tab:"cook", sub:"byMood"},
-  {hour:[5,11], icon:"💬", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
+  {hour:[2,10], icon:"💬", bg:"linear-gradient(135deg,#fff9e6,#ffecb3)", color:"#e65100",
    text:"<b>右上の💬LINE共有ボタン</b>で、食材・買い物リスト・献立を家族にLINEで送れます！", tab:"stock"},
 
-  // --- 昼の時間帯 (11-17時) - オレンジ系 ---
-  {hour:[11,17], icon:"🎯", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
+  // --- 昼の時間帯 (10-15時) - オレンジ系 ---
+  {hour:[10,15], icon:"🎯", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
    text:"<b>「🎯 気分で」タブ</b>で「さっぱり」「こってり」「ピリ辛」など気分にぴったりのレシピが見つかります！", tab:"cook", sub:"byMood"},
-  {hour:[11,17], icon:"📦", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
+  {hour:[10,15], icon:"📦", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
    text:"使いたい食材がある？<b>「📦 食材で」タブ</b>で食材をタップして検索！内蔵DB＋AIのW提案。", tab:"cook", sub:"byIng"},
-  {hour:[11,17], icon:"📸", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
+  {hour:[10,15], icon:"📸", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
    text:"買い物した？<b>「🛒 買い物」タブ</b>でレシートを撮影すると、AIが食材を自動で読み取り登録します！", tab:"shop"},
-  {hour:[11,17], icon:"🍽", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
+  {hour:[10,15], icon:"🍽", bg:"linear-gradient(135deg,#ffece0,#ffccbc)", color:"#d84315",
    text:"食材なしで使いたい時は<b>食材タブ上部の「🍽 食材なしで使う」トグル</b>をONに！", tab:"stock"},
 
-  // --- 夜の時間帯 (17-5時) - 紺系 ---
-  {hour:[17,29], icon:"🌙", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  // --- 夜の時間帯 (15時-翌2時) - 紺系 ---
+  {hour:[15,26], icon:"🌙", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"夕飯どうしよう？<b>「🍳 提案」タブ</b>で今ある食材から夕食を提案します！", tab:"cook", sub:"suggest"},
-  {hour:[17,29], icon:"🗓", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"🗓", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"<b>「🍳 提案」タブ下部の週間献立プランナー</b>で1週間分の献立を一括提案！", tab:"cook", sub:"suggest"},
-  {hour:[17,29], icon:"⭐", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"⭐", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"気に入ったレシピは<b>「⭐ お気に入り」タブ</b>に保存！いつでもすぐに見返せます。", tab:"fav"},
-  {hour:[17,29], icon:"🥗", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"🥗", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"<b>栄養バランスチェック</b>！お気に入りタブで調理履歴から今日・今週の栄養を評価できます。", tab:"fav"},
-  {hour:[17,29], icon:"💬", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"💬", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"<b>今日の夕食</b>や<b>1週間の献立(朝・昼・夕を選択)</b>を、💬LINE共有ボタンから家族に送れます！", tab:"shop"},
-  {hour:[17,29], icon:"🔑", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"🔑", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"<b>APIキー</b>を設定するとAI提案がパワーアップ！設定タブから無料で取得できます。", tab:"set"},
-  {hour:[17,29], icon:"ℹ️", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
+  {hour:[15,26], icon:"ℹ️", bg:"linear-gradient(135deg,#e8eaf6,#9fa8da)", color:"#283593",
    text:"<b>設定タブ</b>のいちばん下に、このアプリの全機能の説明があります！使い方に迷ったらチェック。", tab:"set"}
 ];
 
