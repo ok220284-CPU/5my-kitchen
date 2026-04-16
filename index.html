@@ -1817,16 +1817,19 @@ function _offlineFallbackForQuick(resultEl) {
 // === レシピ集（食材登録不要）機能 ===
 function showBrowseFilters() {
   const genreEl = document.getElementById("browseGenre");
-  const moodEl = document.getElementById("browseMood");
+  if(!genreEl) return;
   const genres = ["すべて","和食","洋食","中華","時短","がっつり","ヘルシー"];
-  const moods = ["指定なし","さっぱり","こってり","ピリ辛","あったかい","時短パパッと",
-    "丼もの","麺類","煮物","炒め物","焼き物","揚げ物","副菜","汁物","魚料理"];
   genreEl.innerHTML = genres.map((g,i) =>
     `<button class="${i===0?'active':''}" onclick="toggleBrowseFilter(this,'genre')">${g}</button>`
   ).join('');
-  moodEl.innerHTML = moods.map((m,i) =>
-    `<button class="${i===0?'active':''}" onclick="toggleBrowseFilter(this,'mood')">${m}</button>`
-  ).join('');
+  const moodEl = document.getElementById("browseMood");
+  if(moodEl){
+    const moods = ["指定なし","さっぱり","こってり","ピリ辛","あったかい","時短パパッと",
+      "丼もの","麺類","煮物","炒め物","焼き物","揚げ物","副菜","汁物","魚料理"];
+    moodEl.innerHTML = moods.map((m,i) =>
+      `<button class="${i===0?'active':''}" onclick="toggleBrowseFilter(this,'mood')">${m}</button>`
+    ).join('');
+  }
 }
 
 function toggleBrowseFilter(btn, type) {
@@ -1849,9 +1852,14 @@ function toggleBrowseFilter(btn, type) {
 
 function getSelectedBrowseFilters() {
   const genreBtns = document.querySelectorAll('#browseGenre button.active');
-  const moodBtns = document.querySelectorAll('#browseMood button.active');
+  const moodBtnsNode = document.querySelectorAll('#browseMood button.active');
   const genre = Array.from(genreBtns).map(b => b.textContent);
-  const moods = Array.from(moodBtns).map(b => b.textContent);
+  // 気分タブの選択状態も考慮
+  const moodBtn = document.querySelector('.mood-btn.mood-active');
+  const selectedMood = moodBtn ? moodBtn.querySelector('span').textContent : null;
+  let moods = Array.from(moodBtnsNode).map(b => b.textContent);
+  if(selectedMood && moods.length === 0) moods = [selectedMood];
+  if(moods.length === 0) moods = ['指定なし'];
   return { genre: genre[0] || 'すべて', moods };
 }
 
