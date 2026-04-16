@@ -54,7 +54,7 @@ Google AI Studio(<a href="https://aistudio.google.com/apikey" style="color:#d438
 
 </p><input type="password" id="apiKey" placeholder="APIキーを貼り付け" class="fld mb10"><button class="sub" onclick="saveApiKey()" style="width:100%">保存</button><p class="hint">キーはこの端末のブラウザ内にのみ保存されます。</p></div><div class="card"><h2><span class="ic">🚫</span>アレルギー・苦手食材</h2><p class="hint mb8">登録した食材はAI提案から除外されます。複数ある場合は「、」で区切ってください。</p><textarea id="allergyInput" rows="2" placeholder="例: えび、乳製品、セロリ" onchange="saveAllergies()" class="fld" style="resize:vertical"></textarea></div><div class="card"><h2><span class="ic">🗑</span>非表示プリセット</h2><p class="hint mb10">プリセットから非表示にした食材の一覧。復元できます。</p><div id="hiddenList"></div></div><div class="card"><h2><span class="ic">📊</span>データ管理</h2><div class="setting-row"><span>登録食材</span><span id="dataCountIng" class="pri-n">0件</span></div><div class="setting-row"><span>お気に入り</span><span id="dataCountFav" class="pri-n">0件</span></div><div class="setting-row"><span>調理履歴</span><span id="dataCountHist" class="pri-n">0件</span></div><button class="sub fw mt10" onclick="exportData()">💾 データを書き出す</button><button class="sub fw mt8" onclick="openImportModal()">📂 データを読み込む</button><button class="ghost" style="width:100%;margin-top:8px;color:#c62828" onclick="clearAll()">🗑 全データを削除</button></div><div class="card"><h2><span class="ic">ℹ️</span>このアプリについて</h2><p style="font-size:13px;color:#5a4030;line-height:1.7">
 家の食材を管理して、Gemini AIが料理や買い出しを提案してくれるアプリです。データはすべて端末内に保存されます。
-</p><button class="sub fw mt12" onclick="updateApp()">🔄 最新版に更新</button><p class="hint mt6">アプリを最新版に更新します。食材・お気に入り・履歴などのデータは保持されます。</p><p class="hint mt8">Version 2.43 - 旬＆お得情報表示修正</p></div></section></main><div class="modal-bg" id="presetMenuModal"><div class="modal"><h3 id="presetMenuTitle">食材</h3><p class="hint mb10">この食材をどうしますか?</p><button class="sub fw mb8" onclick="addFromPresetMenu()">➕ 登録する</button><button class="sub fw mb8" style="color:#c62828;border-color:#ef9a9a" onclick="hidePreset()">🗑 このプリセットを非表示にする</button><button class="ghost fw" onclick="closePresetMenu()">キャンセル</button></div></div><div class="modal-bg" id="delConfirmModal"><div class="modal"><h3 id="delConfirmTitle">削除しますか?</h3><p class="hint mb10">この操作は取り消せません。</p><div class="modal-actions"><button class="sub" onclick="closeDelConfirm()">キャンセル</button><button class="primary" style="background:linear-gradient(135deg,#e53935,#c62828)" onclick="confirmDelete()">削除する</button></div></div></div>
+</p><button class="sub fw mt12" onclick="updateApp()">🔄 最新版に更新</button><p class="hint mt6">アプリを最新版に更新します。食材・お気に入り・履歴などのデータは保持されます。</p><p class="hint mt8">Version 2.43 - 旬情報表示＋食材なしでも利用可能</p></div></section></main><div class="modal-bg" id="presetMenuModal"><div class="modal"><h3 id="presetMenuTitle">食材</h3><p class="hint mb10">この食材をどうしますか?</p><button class="sub fw mb8" onclick="addFromPresetMenu()">➕ 登録する</button><button class="sub fw mb8" style="color:#c62828;border-color:#ef9a9a" onclick="hidePreset()">🗑 このプリセットを非表示にする</button><button class="ghost fw" onclick="closePresetMenu()">キャンセル</button></div></div><div class="modal-bg" id="delConfirmModal"><div class="modal"><h3 id="delConfirmTitle">削除しますか?</h3><p class="hint mb10">この操作は取り消せません。</p><div class="modal-actions"><button class="sub" onclick="closeDelConfirm()">キャンセル</button><button class="primary" style="background:linear-gradient(135deg,#e53935,#c62828)" onclick="confirmDelete()">削除する</button></div></div></div>
 <div class="modal-bg" id="addModal"><div class="modal"><h3 id="addTitle">食材を追加</h3><label>食材名</label><input type="text" id="mName"><label>カテゴリ</label><select id="mCat"></select><div class="two-col"><div><label>初期量(数値)</label><input type="number" id="mAmount" value="1" min="0" step="any"></div><div><label>単位</label><select id="mUnit"></select></div></div><label>賞味期限(目安で自動入力・変更可)</label><input type="date" id="mExpiry"><p id="mExpiryHint" class="hint"></p><div class="modal-actions"><button class="sub" onclick="closeAddModal()">キャンセル</button><button class="primary" onclick="confirmAdd()">追加</button></div></div></div><div class="modal-bg" id="useModal"><div class="modal"><h3 id="useTitle">使った量を入力</h3><div id="useCurrent" style="font-size:13px;color:#9a7156;margin-bottom:10px"></div><label>数値で指定</label><div style="display:flex;gap:8px;align-items:center"><input type="number" id="useCustomVal" placeholder="使った量" min="0" step="any" class="fld"><span id="useUnitLabel" style="font-size:14px;color:#8b4513;font-weight:600;min-width:30px"></span></div><p class="hint mt6">例: 玉ねぎ1個使った→1、醤油50ml使った→50</p><div class="modal-actions"><button class="sub" onclick="closeUseModal()">キャンセル</button><button class="primary" onclick="confirmUse()">使った</button></div></div></div><div class="modal-bg" id="shareModal"><div class="modal"><h3>家族に共有</h3><p class="hint mb10">共有する内容を選んでください。</p><label class="chk-row"><input type="checkbox" id="shareStock" checked class="cbx">
 📦 食材リスト(残量・賞味期限付き)
 </label><label class="chk-row"><input type="checkbox" id="shareShoplist" checked class="cbx">
@@ -446,12 +446,16 @@ return JSON.parse(text);
 }
 async function suggestRecipes(btn){
 const resultEl = document.getElementById("cookResult");
-if(state.stock.length===0){toast("食材が登録されていません","error");return}
+if(state.stock.length===0){
+const sr0=document.getElementById("cookResult");
+const m0=document.getElementById("cookMood").value;
+const d0=parseInt(document.getElementById("cookDishes").value)||2;
+let r0=offlineSuggest(document.getElementById("cookMeal").value,m0,d0,false)||[];
+if(r0.length===0){const rnd=[...RECIPE_DB].sort(()=>Math.random()-0.5).slice(0,d0);r0=rnd.map(r=>{const ri=r.ings.map(i=>i.n);return{...r,matchRate:0,matchCount:0,totalIngs:ri.length}})}
+lastOfflineResults=r0;
+sr0.innerHTML=renderOfflineRecipes(r0,"⚡ おすすめレシピ（食材登録で精度UP！）");return}
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const restoreBtn = btnLoading(btn,"考え中…");
 const mood = document.getElementById("cookMood").value;
 const meal = document.getElementById("cookMeal").value;
@@ -512,10 +516,7 @@ return "夕食";
 async function suggestShopping(btn){
 const resultEl = document.getElementById("shopResult");
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const restoreBtn = btnLoading(btn,"考え中…");
 const budget = document.getElementById("shopBudget").value;
 resultEl.innerHTML='<div class="loading"><div class="spinner"></div><div class="mt10">考えています…</div></div>';
@@ -722,10 +723,7 @@ const f = e.target.files[0];
 if(!f)return;
 e.target.value = "";
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const img = await resizeImage(f,1200);
 const base64 = img.split(",")[1];
 const modalBody = document.getElementById("receiptItems");
@@ -909,8 +907,9 @@ async function quickSuggest(){
 document.querySelector('nav.tabs button[data-tab="cook"]').click();
 document.querySelector('.cook-sub[data-sub="suggest"]').click();
 if(state.stock.length===0){
-document.getElementById("cookResult").innerHTML='<div class="error">食材が登録されていません。</div>';return;
-}
+const rnd=[...RECIPE_DB].sort(()=>Math.random()-0.5).slice(0,2);
+lastOfflineResults=rnd.map(r=>{const ri=r.ings.map(i=>i.n);return{...r,matchRate:0,matchCount:0,totalIngs:ri.length}});
+document.getElementById("cookResult").innerHTML=renderOfflineRecipes(lastOfflineResults,"🎲 おまかせランダム（食材登録で精度UP！）");return}
 if(!state.apiKey){
 const qr=document.getElementById("cookResult");
 lastOfflineResults=offlineSuggest(detectMealFromTime(),'おまかせ',2,true)||[];
@@ -923,10 +922,7 @@ await suggestRecipes();
 async function generateMealPlan(btn){
 const resultEl = document.getElementById("planResult");
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const days = parseInt(document.getElementById("planDays").value)||7;
 const withShop = document.getElementById("planShop").value==="yes";
 const restoreBtn = btnLoading(btn,days+"日分を作成中…");
@@ -1095,10 +1091,7 @@ document.getElementById("planResult").innerHTML = `<div class="error">エラー:
 }
 async function addPlanMeal(dateKey,mealKey){
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const mealLabel = mealKey==="breakfast"?"朝食":(mealKey==="lunch"?"昼食":"夕食");
 document.getElementById("planResult").innerHTML = '<div class="loading"><div class="spinner"></div><div class="mt10">料理を考えています…</div></div>';
 const ingList = state.stock.length>0?state.stock.map(i=>i.name).join("、"):"(食材未登録)";
@@ -1185,10 +1178,7 @@ document.getElementById("planResult").innerHTML="";
 async function checkNutrition(range,btn){
 const el = document.getElementById("nutriResult");
 if(!state.apiKey){
-const sr=document.getElementById("cookResult");
-lastOfflineResults=offlineSuggest(document.getElementById("cookMeal").value,document.getElementById("cookMood").value,parseInt(document.getElementById("cookDishes").value)||2,document.getElementById("priorityExpiry").checked)||[];
-if(lastOfflineResults.length>0){sr.innerHTML=renderOfflineRecipes(lastOfflineResults,'⚡ 内蔵レシピDBから提案（APIキー未設定）');toast('APIキー未設定 - 内蔵DBから提案','error')}else{toast("APIキーを登録してください","error")}
-return}
+toast("APIキーを設定すると買い出し提案が使えます","error");return}
 const now = Date.now();
 const span = range==="today"?86400000:7*86400000;
 const cutoff = now - span;
@@ -1467,7 +1457,7 @@ function searchByMood(moodKey) {
       if(recipe.name.includes(kw) || recipe.steps.includes(kw)) moodScore += 1;
     });
     return { ...recipe, matchRate, matchCount, totalIngs: recipeIngs.length, moodScore };
-  }).filter(r => r.moodScore > 0 && r.matchRate >= 20)
+  }).filter(r => r.moodScore > 0 && (stockNames.length === 0 || r.matchRate >= 20))
     .sort((a, b) => b.moodScore - a.moodScore || b.matchRate - a.matchRate)
     .slice(0, 8);
 }
@@ -1475,7 +1465,7 @@ function searchByMood(moodKey) {
 // --- 汎用オフラインレシピ検索（既存suggestRecipes用フォールバック） ---
 function offlineSuggest(mealType, mood, dishCount, prioritizeExpiry) {
   const stockNames = state.stock.map(s => s.name);
-  if(stockNames.length === 0) return [];
+  const hasStock = stockNames.length > 0;
   let scored = RECIPE_DB.map(recipe => {
     const recipeIngs = recipe.ings.map(i => i.n);
     let matchCount = 0;
@@ -1491,7 +1481,7 @@ function offlineSuggest(mealType, mood, dishCount, prioritizeExpiry) {
     }
     if(mealType === '朝食' && recipe.time <= 15) catScore += 1;
     return { ...recipe, matchRate, matchCount, totalIngs: recipeIngs.length, catScore };
-  }).filter(r => r.matchRate >= 20)
+  }).filter(r => hasStock ? r.matchRate >= 20 : true)
     .sort((a, b) => b.catScore - a.catScore || b.matchRate - a.matchRate);
   if(prioritizeExpiry) {
     const today = new Date(); today.setHours(0,0,0,0);
@@ -1579,7 +1569,10 @@ function _shopOff(idx) {
 function showIngredientPicker() {
   const el = document.getElementById('ingPickerArea');
   if(state.stock.length === 0) {
-    el.innerHTML = '<div class="empty">食材が登録されていません</div>';
+    const ap=[];Object.values(PRESETS).forEach(d=>d.items.forEach(([n])=>ap.push(n)));
+    el.innerHTML='<p class="hint mb8">食材をタップで選んで検索できます</p><div class="preset-grid">'+
+      ap.slice(0,30).map(n=>'<button onclick="toggleIngPick(this,\''+n.replace(/'/g,"\\'")+'\')">'+n+'</button>').join('')+
+      '</div><button class="primary mt10" onclick="searchBySelectedIngs()">🔍 この食材で検索</button>';
     return;
   }
   el.innerHTML = '<div class="preset-grid">' +
@@ -1668,10 +1661,7 @@ function searchByMoodClick(moodKey) {
   
   const resultEl = document.getElementById('moodPickerResult');
   
-  if(state.stock.length === 0) {
-    resultEl.innerHTML = '<div class="error">食材が登録されていません</div>';
-    return;
-  }
+  // 食材なしでもOK
   
   // 内蔵DBから検索
   const dbResults = searchByMood(moodKey);
@@ -1721,7 +1711,7 @@ JSON形式のみ:
 // --- 「⚡ 内蔵レシピから提案」ボタン用 ---
 function offlineSuggestDirect(btn) {
   const resultEl = document.getElementById("cookResult");
-  if(state.stock.length === 0) { toast("食材が登録されていません","error"); return; }
+  // 食材なしでもDB検索OK
   const restoreBtn = btnLoading(btn, "検索中…");
   const mood = document.getElementById("cookMood").value;
   const dishes = parseInt(document.getElementById("cookDishes").value) || 2;
