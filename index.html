@@ -98,9 +98,52 @@ button:active{filter:brightness(.95)}
 </section><section id="tab-shop" style="display:none"><div id="seasonalSection"></div><div class="card"><h2><span class="ic">📸</span>レシートから自動登録</h2><p class="hint mb10">買ったレシートを撮影するとGemini AIが食材を読み取ります。</p><input type="file" id="receiptFile" accept="image/*" capture="environment" style="display:none" onchange="scanReceipt(event)"><button class="primary" onclick="document.getElementById('receiptFile').click()">📷 レシートを撮影</button></div><div class="card"><h2><span class="ic">🛒</span>買い物リスト <span id="shopCount" class="cnt"></span></h2><div class="manual-input mb10"><input type="text" id="shopInput" placeholder="買うものを追加"><button class="sub" onclick="addShopItem()">追加</button></div><div id="shopList"></div><div style="display:flex;gap:6px;margin-top:10px"><button class="ghost" onclick="clearCheckedShop()" style="flex:1">チェック済みを削除</button><button class="ghost" onclick="checkedToStock()" style="flex:1;color:#2e7d32">チェック分を食材に</button></div></div><div class="card"><h2><span class="ic">💡</span>買い足しで作れる料理</h2><p class="hint mb10">「あと◯◯があれば、こんな料理が作れる!」を提案します。</p><select id="shopBudget" class="fld mb12"><option value="1〜2品">1〜2品(少し買い足す)</option><option value="3〜4品" selected>3〜4品(普通の買い物)</option><option value="5品以上">5品以上(しっかり買う)</option></select><button class="primary" onclick="suggestShopping(this)">💡 買い出し提案</button></div><div id="shopResult"></div></section><section id="tab-fav" style="display:none"><div class="card"><h2><span class="ic">⭐</span>お気に入りレシピ <span id="favCount" class="cnt"></span></h2><div id="favList"></div></div><div class="card"><h2><span class="ic">🥗</span>栄養バランス</h2><p class="hint mb10">調理履歴からざっくり評価します。</p><div style="display:flex;gap:6px;margin-bottom:10px"><button class="sub" style="flex:1" onclick="checkNutrition('today',this)">今日</button><button class="sub" style="flex:1" onclick="checkNutrition('week',this)">今週</button></div><div id="nutriResult"></div></div><div class="card"><h2><span class="ic">📖</span>調理履歴 <span id="histCount" class="cnt"></span></h2><div id="histList"></div></div></section><section id="tab-set" style="display:none"><div class="card"><h2><span class="ic">👨‍👩‍👧</span>家族構成</h2><p class="hint mb10">料理の量と食材の減り方に反映されます。</p><div class="three-col"><div><label class="flabel">大人</label><input type="number" id="famAdult" min="0" value="1" onchange="saveFamily()" class="fld fld-ctr"></div><div><label class="flabel">子供</label><input type="number" id="famChild" min="0" value="0" onchange="saveFamily()" class="fld fld-ctr"></div><div><label class="flabel">幼児</label><input type="number" id="famBaby" min="0" value="0" onchange="saveFamily()" class="fld fld-ctr"></div></div><p class="hint mt8">大人=1.0、子供=0.6、幼児=0.3の比率で計算します。</p></div><div class="card"><h2><span class="ic">🍽</span>食事パターン</h2><p class="hint mb10">通常作る品数を食事ごとに登録します。</p><div class="three-col"><div><label class="flabel">朝食</label><select id="mealBreakfast" onchange="saveMealPattern()" class="fld"><option value="1">1品</option><option value="2">2品</option><option value="3">3品</option><option value="4">4品</option></select></div><div><label class="flabel">昼食</label><select id="mealLunch" onchange="saveMealPattern()" class="fld"><option value="1">1品</option><option value="2">2品</option><option value="3">3品</option><option value="4">4品</option></select></div><div><label class="flabel">夕食</label><select id="mealDinner" onchange="saveMealPattern()" class="fld"><option value="1">1品</option><option value="2">2品</option><option value="3">3品</option><option value="4">4品</option><option value="5">5品</option></select></div></div></div><div class="card"><h2><span class="ic">🔑</span>Gemini APIキー</h2><p class="hint mb8">
 Google AI Studio(<a href="https://aistudio.google.com/apikey" style="color:#d4380d">aistudio.google.com/apikey</a>)で無料取得できます。
 
-</p><input type="password" id="apiKey" placeholder="APIキーを貼り付け" class="fld mb10"><button class="sub" onclick="saveApiKey()" style="width:100%">保存</button><p class="hint">キーはこの端末のブラウザ内にのみ保存されます。</p></div><div class="card"><h2><span class="ic">🚫</span>アレルギー・苦手食材</h2><p class="hint mb8">登録した食材はAI提案から除外されます。複数ある場合は「、」で区切ってください。</p><textarea id="allergyInput" rows="2" placeholder="例: えび、乳製品、セロリ" onchange="saveAllergies()" class="fld" style="resize:vertical"></textarea></div><div class="card"><h2><span class="ic">🗑</span>非表示プリセット</h2><p class="hint mb10">プリセットから非表示にした食材の一覧。復元できます。</p><div id="hiddenList"></div></div><div class="card"><h2><span class="ic">📊</span>データ管理</h2><div class="setting-row"><span>登録食材</span><span id="dataCountIng" class="pri-n">0件</span></div><div class="setting-row"><span>お気に入り</span><span id="dataCountFav" class="pri-n">0件</span></div><div class="setting-row"><span>調理履歴</span><span id="dataCountHist" class="pri-n">0件</span></div><button class="sub fw mt10" onclick="exportData()">💾 データを書き出す</button><button class="sub fw mt8" onclick="openImportModal()">📂 データを読み込む</button><button class="ghost" style="width:100%;margin-top:8px;color:#c62828" onclick="clearAll()">🗑 全データを削除</button></div><div class="card"><h2><span class="ic">ℹ️</span>このアプリについて</h2><p style="font-size:13px;color:#5a4030;line-height:1.7">
-家の食材を管理して、Gemini AIが料理や買い出しを提案してくれるアプリです。データはすべて端末内に保存されます。
-</p><button class="sub fw mt12" onclick="updateApp()">🔄 最新版に更新</button><p class="hint mt6">アプリを最新版に更新します。食材・お気に入り・履歴などのデータは保持されます。</p><p class="hint mt8">Version 2.43 - 旬情報表示＋食材なしでも利用可能</p></div></section></main><div class="modal-bg" id="presetMenuModal"><div class="modal"><h3 id="presetMenuTitle">食材</h3><p class="hint mb10">この食材をどうしますか?</p><button class="sub fw mb8" onclick="addFromPresetMenu()">➕ 登録する</button><button class="sub fw mb8" style="color:#c62828;border-color:#ef9a9a" onclick="hidePreset()">🗑 このプリセットを非表示にする</button><button class="ghost fw" onclick="closePresetMenu()">キャンセル</button></div></div><div class="modal-bg" id="delConfirmModal"><div class="modal"><h3 id="delConfirmTitle">削除しますか?</h3><p class="hint mb10">この操作は取り消せません。</p><div class="modal-actions"><button class="sub" onclick="closeDelConfirm()">キャンセル</button><button class="primary" style="background:linear-gradient(135deg,#e53935,#c62828)" onclick="confirmDelete()">削除する</button></div></div></div>
+</p><input type="password" id="apiKey" placeholder="APIキーを貼り付け" class="fld mb10"><button class="sub" onclick="saveApiKey()" style="width:100%">保存</button><p class="hint">キーはこの端末のブラウザ内にのみ保存されます。</p></div><div class="card"><h2><span class="ic">🚫</span>アレルギー・苦手食材</h2><p class="hint mb8">登録した食材はAI提案から除外されます。複数ある場合は「、」で区切ってください。</p><textarea id="allergyInput" rows="2" placeholder="例: えび、乳製品、セロリ" onchange="saveAllergies()" class="fld" style="resize:vertical"></textarea></div><div class="card"><h2><span class="ic">🗑</span>非表示プリセット</h2><p class="hint mb10">プリセットから非表示にした食材の一覧。復元できます。</p><div id="hiddenList"></div></div><div class="card"><h2><span class="ic">📊</span>データ管理</h2><div class="setting-row"><span>登録食材</span><span id="dataCountIng" class="pri-n">0件</span></div><div class="setting-row"><span>お気に入り</span><span id="dataCountFav" class="pri-n">0件</span></div><div class="setting-row"><span>調理履歴</span><span id="dataCountHist" class="pri-n">0件</span></div><button class="sub fw mt10" onclick="exportData()">💾 データを書き出す</button><button class="sub fw mt8" onclick="openImportModal()">📂 データを読み込む</button><button class="ghost" style="width:100%;margin-top:8px;color:#c62828" onclick="clearAll()">🗑 全データを削除</button></div><div class="card"><h2><span class="ic">ℹ️</span>このアプリについて</h2>
+<p style="font-size:13px;color:#5a4030;line-height:1.7">
+家の食材を管理して、AIが料理や買い出しを提案してくれるPWAアプリです。すべて端末内に保存され、オフラインでも動作します。
+</p>
+
+<div class="flabel mt14">📱 主な機能</div>
+<div style="font-size:12px;color:#5a4030;line-height:1.8;padding:10px;background:#fff8e8;border-radius:8px">
+<b>📦 食材タブ</b><br>
+・カテゴリ別プリセットから食材登録（賞味期限自動）<br>
+・長押しで非表示、トグルで「食材なしモード」<br><br>
+
+<b>🍳 料理タブ</b><br>
+・<b>提案</b>：今ある食材からAI＋内蔵100品で料理提案<br>
+・<b>食材で</b>：食材を選んでレシピ検索<br>
+・<b>気分で</b>：10の気分からレシピ提案＋ランダム3品<br>
+・下部で週間献立プランナー<br><br>
+
+<b>🛒 買い物タブ</b><br>
+・今月の旬＆お得情報（タップでレシピ/買い物）<br>
+・節約Tips＋AI値上げ情報<br>
+・レシート撮影で食材自動登録<br>
+・買い物リスト管理＋買い足し提案<br><br>
+
+<b>⭐ お気に入りタブ</b><br>
+・お気に入りレシピ保存<br>
+・栄養バランス評価（今日/今週）<br>
+・調理履歴<br><br>
+
+<b>⚙ 設定タブ</b><br>
+・家族構成、食事パターン、アレルギー<br>
+・Gemini APIキー（AI機能用）<br>
+・データ書き出し/読み込み<br><br>
+
+<b>💬 LINE共有（ヘッダー）</b><br>
+食材・買い物リスト・今日の夕食・週間献立を家族にLINEでシェア
+</div>
+
+<div class="flabel mt14">🔑 AI機能について</div>
+<p style="font-size:12px;color:#5a4030;line-height:1.6">
+Google Gemini APIキー（無料）を設定するとAI提案が使えます。未設定でも内蔵100品レシピDBで動作します。
+</p>
+
+<button class="sub fw mt14" onclick="updateApp()">🔄 最新版に更新</button>
+<p class="hint mt6">アプリを最新版に更新します。食材・お気に入り・履歴などのデータは保持されます。</p>
+<p class="hint mt8">Version 2.66 - 機能説明追加</p>
+</div></section></main><div class="modal-bg" id="presetMenuModal"><div class="modal"><h3 id="presetMenuTitle">食材</h3><p class="hint mb10">この食材をどうしますか?</p><button class="sub fw mb8" onclick="addFromPresetMenu()">➕ 登録する</button><button class="sub fw mb8" style="color:#c62828;border-color:#ef9a9a" onclick="hidePreset()">🗑 このプリセットを非表示にする</button><button class="ghost fw" onclick="closePresetMenu()">キャンセル</button></div></div><div class="modal-bg" id="delConfirmModal"><div class="modal"><h3 id="delConfirmTitle">削除しますか?</h3><p class="hint mb10">この操作は取り消せません。</p><div class="modal-actions"><button class="sub" onclick="closeDelConfirm()">キャンセル</button><button class="primary" style="background:linear-gradient(135deg,#e53935,#c62828)" onclick="confirmDelete()">削除する</button></div></div></div>
 <div class="modal-bg" id="addModal"><div class="modal"><h3 id="addTitle">食材を追加</h3><label>食材名</label><input type="text" id="mName"><label>カテゴリ</label><select id="mCat"></select><div class="two-col"><div><label>初期量(数値)</label><input type="number" id="mAmount" value="1" min="0" step="any"></div><div><label>単位</label><select id="mUnit"></select></div></div><label>賞味期限(目安で自動入力・変更可)</label><input type="date" id="mExpiry"><p id="mExpiryHint" class="hint"></p><div class="modal-actions"><button class="sub" onclick="closeAddModal()">キャンセル</button><button class="primary" onclick="confirmAdd()">追加</button></div></div></div><div class="modal-bg" id="useModal"><div class="modal"><h3 id="useTitle">使った量を入力</h3><div id="useCurrent" style="font-size:13px;color:#9a7156;margin-bottom:10px"></div><label>数値で指定</label><div style="display:flex;gap:8px;align-items:center"><input type="number" id="useCustomVal" placeholder="使った量" min="0" step="any" class="fld"><span id="useUnitLabel" style="font-size:14px;color:#8b4513;font-weight:600;min-width:30px"></span></div><p class="hint mt6">例: 玉ねぎ1個使った→1、醤油50ml使った→50</p><div class="modal-actions"><button class="sub" onclick="closeUseModal()">キャンセル</button><button class="primary" onclick="confirmUse()">使った</button></div></div></div><div class="modal-bg" id="shareModal"><div class="modal" style="max-width:400px"><h3>💬 家族にLINE共有</h3><p class="hint mb10">共有したい内容にチェック</p>
 
 <label class="chk-row"><input type="checkbox" id="shareStock" checked onchange="updateSharePreview()" class="cbx">
@@ -2057,13 +2100,13 @@ function renderBrowseRecipes(recipes, title) {
 const APP_TIPS = [
   // --- 朝の時間帯 (5-11時) ---
   {hour:[5,11], icon:"☀️", bg:"linear-gradient(135deg,#fff8e1,#ffecb3)", color:"#f57c00",
-   text:"おはようございます！<b>「🍳 提案」タブ</b>で朝食にぴったりの料理を提案します。食事区分を「朝食」に！", tab:"cook", sub:"suggest"},
+   text:"おはようございます！<b>「🍳 提案」タブ</b>で朝食にぴったりの料理を提案します。", tab:"cook", sub:"suggest"},
   {hour:[5,11], icon:"🌿", bg:"linear-gradient(135deg,#e8f5e9,#c8e6c9)", color:"#2e7d32",
-   text:"<b>「🛒 買い物」タブ</b>の上部に<b>今月の旬＆お得情報</b>！節約のヒントも毎日変わります。", tab:"shop"},
+   text:"<b>「🛒 買い物」タブ</b>の上部に今月の旬＆お得情報！食材タップでレシピや買い物リストに追加できます。", tab:"shop"},
   {hour:[5,11], icon:"🎲", bg:"linear-gradient(135deg,#fce4ec,#f8bbd0)", color:"#c62828",
-   text:"朝から悩まない！<b>「🎯 気分で」タブの🎲ランダム3品</b>でサクッと決められます。", tab:"cook", sub:"byMood"},
-  {hour:[5,11], icon:"⚡", bg:"linear-gradient(135deg,#e3f2fd,#bbdefb)", color:"#1565c0",
-   text:"<b>APIキーなし</b>でも使えます！内蔵100品レシピから提案。", tab:"cook", sub:"suggest"},
+   text:"朝から悩まない！<b>「🎯 気分で」タブ</b>の🎲ランダム3品でサクッと決められます。", tab:"cook", sub:"byMood"},
+  {hour:[5,11], icon:"💬", bg:"linear-gradient(135deg,#e8f5e9,#c8e6c9)", color:"#06c755",
+   text:"<b>右上の💬LINE共有ボタン</b>で、食材・買い物リスト・献立を家族にLINEで送れます！", tab:"stock"},
 
   // --- 昼の時間帯 (11-17時) ---
   {hour:[11,17], icon:"🎯", bg:"linear-gradient(135deg,#f3e5f5,#e1bee7)", color:"#7b1fa2",
@@ -2084,10 +2127,12 @@ const APP_TIPS = [
    text:"気に入ったレシピは<b>「⭐ お気に入り」タブ</b>に保存！いつでもすぐに見返せます。", tab:"fav"},
   {hour:[17,29], icon:"🥗", bg:"linear-gradient(135deg,#e8f5e9,#c8e6c9)", color:"#2e7d32",
    text:"<b>栄養バランスチェック</b>！お気に入りタブで調理履歴から今日・今週の栄養を評価できます。", tab:"fav"},
+  {hour:[17,29], icon:"💬", bg:"linear-gradient(135deg,#e8f5e9,#c8e6c9)", color:"#06c755",
+   text:"<b>今日の夕食</b>や<b>1週間の献立(朝・昼・夕を選択)</b>を、💬LINE共有ボタンから家族に送れます！", tab:"shop"},
   {hour:[17,29], icon:"🔑", bg:"linear-gradient(135deg,#fff3e0,#ffe0b2)", color:"#e65100",
    text:"<b>APIキー</b>を設定するとAI提案がパワーアップ！設定タブから無料で取得できます。", tab:"set"},
-  {hour:[17,29], icon:"📱", bg:"linear-gradient(135deg,#e8f5e9,#c8e6c9)", color:"#2e7d32",
-   text:"<b>「家族に共有」機能</b>で食材・買い物リスト・献立をLINEで送れます。買い物タブからどうぞ！", tab:"shop"}
+  {hour:[17,29], icon:"ℹ️", bg:"linear-gradient(135deg,#f3e5f5,#e1bee7)", color:"#7b1fa2",
+   text:"<b>設定タブ</b>のいちばん下に、このアプリの全機能の説明があります！使い方に迷ったらチェック。", tab:"set"}
 ];
 
 function showTipsBanner() {
