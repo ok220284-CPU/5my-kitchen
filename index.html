@@ -2130,7 +2130,7 @@ function renderSeasonalSection() {
   data.veg.forEach((v, i) => {
     const inStock = state.stock.some(s => s.name.includes(v) || v.includes(s.name));
     if(i > 0) html += `<span class="sep"> </span>`;
-    html += `<span class="seasonal-tag${inStock ? ' have' : ''}" onclick="addSeasonalToShop('${v}')">${v}${inStock ? ' ✓' : ''}</span>`;
+    html += `<span class="seasonal-tag${inStock ? ' have' : ''}" onclick="showSeasonalIngRecipes('${v}')">${v}${inStock ? ' ✓' : ''}<span class="tag-shop" onclick="event.stopPropagation();addSeasonalToShop('${v}')">🛒</span></span>`;
   });
   html += `</div></div>`;
 
@@ -2138,7 +2138,7 @@ function renderSeasonalSection() {
   html += `<div class="seasonal-cat"><div class="flabel">🍎 旬の果物</div><div class="seasonal-tags">`;
   data.fruit.forEach((v, i) => {
     if(i > 0) html += `<span class="sep"> </span>`;
-    html += `<span class="seasonal-tag fruit" onclick="addSeasonalToShop('${v}')">${v}</span>`;
+    html += `<span class="seasonal-tag fruit" onclick="showSeasonalIngRecipes('${v}')">${v}<span class="tag-shop" onclick="event.stopPropagation();addSeasonalToShop('${v}')">🛒</span></span>`;
   });
   html += `</div></div>`;
 
@@ -2147,7 +2147,7 @@ function renderSeasonalSection() {
   data.fish.forEach((v, i) => {
     const inStock = state.stock.some(s => s.name.includes(v) || v.includes(s.name));
     if(i > 0) html += `<span class="sep"> </span>`;
-    html += `<span class="seasonal-tag fish${inStock ? ' have' : ''}" onclick="addSeasonalToShop('${v}')">${v}${inStock ? ' ✓' : ''}</span>`;
+    html += `<span class="seasonal-tag fish${inStock ? ' have' : ''}" onclick="showSeasonalIngRecipes('${v}')">${v}${inStock ? ' ✓' : ''}<span class="tag-shop" onclick="event.stopPropagation();addSeasonalToShop('${v}')">🛒</span></span>`;
   });
   html += `</div></div>`;
 
@@ -2164,6 +2164,34 @@ function renderSeasonalSection() {
 
   html += `</div>`;
   el.innerHTML = html;
+}
+
+
+// 旬食材タップ→その食材を使ったレシピを3品表示
+function showSeasonalIngRecipes(name){
+  const results = RECIPE_DB.filter(r => 
+    r.ings.some(i => i.n.includes(name) || name.includes(i.n))
+  ).slice(0, 3);
+  
+  const resultEl = document.getElementById('seasonalRecipeResult');
+  if(!resultEl) return;
+  
+  if(results.length > 0){
+    const stockNames = state.stock.map(s => s.name);
+    lastOfflineResults = results.map(r => {
+      const ri = r.ings.map(i => i.n);
+      let matchCount = 0;
+      ri.forEach(ringN => {
+        if(stockNames.some(sn => ringN.includes(sn) || sn.includes(ringN))) matchCount++;
+      });
+      return {...r, matchRate: Math.round((matchCount/ri.length)*100), matchCount, totalIngs: ri.length};
+    });
+    resultEl.innerHTML = renderOfflineRecipes(lastOfflineResults, '🍳 「' + name + '」を使うレシピ');
+    resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+    toast('🍳 ' + name + 'のレシピ3品', 'success');
+  } else {
+    toast(name + 'を使うレシピが見つかりませんでした', 'error');
+  }
 }
 
 function addSeasonalToShop(name) {
