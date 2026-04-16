@@ -54,12 +54,10 @@
 <div id="ingPickerArea"></div></div>
 <div id="ingPickerResult"></div></div>
 <div id="cook-byMood" style="display:none">
-<div class="card"><h2><span class="ic">🎯</span>気分とジャンルで探す</h2>
-<p class="hint mb10">気分やジャンルをタップ。100品のレシピから提案します。</p>
+<div class="card"><h2><span class="ic">🎯</span>今日の気分で選ぶ！</h2>
+<p class="hint mb10">気分をタップするだけ。ぴったりのレシピを提案します。</p>
 <div id="moodPickerArea"></div>
-<div class="flabel mt10">ジャンルで絞り込み</div>
-<div class="browse-filter" id="browseGenre"></div>
-<div style="display:flex;gap:6px;margin-top:10px"><button class="primary" style="flex:1" onclick="browseSearch()">🔍 レシピを探す</button><button class="sub" style="flex:1" onclick="browseRandom()">🎲 ランダム3品</button></div>
+<button class="sub fw mt10" onclick="browseRandom()">🎲 ランダム3品</button>
 </div>
 <div id="moodPickerResult"></div>
 <div id="browseResult"></div></div>
@@ -1704,7 +1702,13 @@ function showMoodPicker() {
     {key:'さっぱり', icon:'🥗', color:'#e8f5e8'},
     {key:'こってり', icon:'🍖', color:'#fff3e0'},
     {key:'ピリ辛', icon:'🌶', color:'#ffebee'},
-    {key:'あったかい', icon:'🍲', color:'#fff8e1'}
+    {key:'あったかい', icon:'🍲', color:'#fff8e1'},
+    {key:'がっつり', icon:'💪', color:'#fce4ec'},
+    {key:'時短パパッと', icon:'⚡', color:'#e3f2fd'},
+    {key:'ヘルシー', icon:'🥬', color:'#e8f5e8'},
+    {key:'和食の気分', icon:'🍱', color:'#fff3ec'},
+    {key:'洋食の気分', icon:'🍝', color:'#fef6ef'},
+    {key:'中華の気分', icon:'🥟', color:'#fff8e1'}
   ];
   el.innerHTML = '<div class="mood-grid">' +
     moods.map(m => `<button class="mood-btn" style="background:${m.color}" onclick="searchByMoodClick('${m.key}')">${m.icon}<br><span>${m.key}</span></button>`).join('') +
