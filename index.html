@@ -101,15 +101,43 @@ Google AI Studio(<a href="https://aistudio.google.com/apikey" style="color:#d438
 </p><input type="password" id="apiKey" placeholder="APIキーを貼り付け" class="fld mb10"><button class="sub" onclick="saveApiKey()" style="width:100%">保存</button><p class="hint">キーはこの端末のブラウザ内にのみ保存されます。</p></div><div class="card"><h2><span class="ic">🚫</span>アレルギー・苦手食材</h2><p class="hint mb8">登録した食材はAI提案から除外されます。複数ある場合は「、」で区切ってください。</p><textarea id="allergyInput" rows="2" placeholder="例: えび、乳製品、セロリ" onchange="saveAllergies()" class="fld" style="resize:vertical"></textarea></div><div class="card"><h2><span class="ic">🗑</span>非表示プリセット</h2><p class="hint mb10">プリセットから非表示にした食材の一覧。復元できます。</p><div id="hiddenList"></div></div><div class="card"><h2><span class="ic">📊</span>データ管理</h2><div class="setting-row"><span>登録食材</span><span id="dataCountIng" class="pri-n">0件</span></div><div class="setting-row"><span>お気に入り</span><span id="dataCountFav" class="pri-n">0件</span></div><div class="setting-row"><span>調理履歴</span><span id="dataCountHist" class="pri-n">0件</span></div><button class="sub fw mt10" onclick="exportData()">💾 データを書き出す</button><button class="sub fw mt8" onclick="openImportModal()">📂 データを読み込む</button><button class="ghost" style="width:100%;margin-top:8px;color:#c62828" onclick="clearAll()">🗑 全データを削除</button></div><div class="card"><h2><span class="ic">ℹ️</span>このアプリについて</h2><p style="font-size:13px;color:#5a4030;line-height:1.7">
 家の食材を管理して、Gemini AIが料理や買い出しを提案してくれるアプリです。データはすべて端末内に保存されます。
 </p><button class="sub fw mt12" onclick="updateApp()">🔄 最新版に更新</button><p class="hint mt6">アプリを最新版に更新します。食材・お気に入り・履歴などのデータは保持されます。</p><p class="hint mt8">Version 2.43 - 旬情報表示＋食材なしでも利用可能</p></div></section></main><div class="modal-bg" id="presetMenuModal"><div class="modal"><h3 id="presetMenuTitle">食材</h3><p class="hint mb10">この食材をどうしますか?</p><button class="sub fw mb8" onclick="addFromPresetMenu()">➕ 登録する</button><button class="sub fw mb8" style="color:#c62828;border-color:#ef9a9a" onclick="hidePreset()">🗑 このプリセットを非表示にする</button><button class="ghost fw" onclick="closePresetMenu()">キャンセル</button></div></div><div class="modal-bg" id="delConfirmModal"><div class="modal"><h3 id="delConfirmTitle">削除しますか?</h3><p class="hint mb10">この操作は取り消せません。</p><div class="modal-actions"><button class="sub" onclick="closeDelConfirm()">キャンセル</button><button class="primary" style="background:linear-gradient(135deg,#e53935,#c62828)" onclick="confirmDelete()">削除する</button></div></div></div>
-<div class="modal-bg" id="addModal"><div class="modal"><h3 id="addTitle">食材を追加</h3><label>食材名</label><input type="text" id="mName"><label>カテゴリ</label><select id="mCat"></select><div class="two-col"><div><label>初期量(数値)</label><input type="number" id="mAmount" value="1" min="0" step="any"></div><div><label>単位</label><select id="mUnit"></select></div></div><label>賞味期限(目安で自動入力・変更可)</label><input type="date" id="mExpiry"><p id="mExpiryHint" class="hint"></p><div class="modal-actions"><button class="sub" onclick="closeAddModal()">キャンセル</button><button class="primary" onclick="confirmAdd()">追加</button></div></div></div><div class="modal-bg" id="useModal"><div class="modal"><h3 id="useTitle">使った量を入力</h3><div id="useCurrent" style="font-size:13px;color:#9a7156;margin-bottom:10px"></div><label>数値で指定</label><div style="display:flex;gap:8px;align-items:center"><input type="number" id="useCustomVal" placeholder="使った量" min="0" step="any" class="fld"><span id="useUnitLabel" style="font-size:14px;color:#8b4513;font-weight:600;min-width:30px"></span></div><p class="hint mt6">例: 玉ねぎ1個使った→1、醤油50ml使った→50</p><div class="modal-actions"><button class="sub" onclick="closeUseModal()">キャンセル</button><button class="primary" onclick="confirmUse()">使った</button></div></div></div><div class="modal-bg" id="shareModal"><div class="modal"><h3>家族に共有</h3><p class="hint mb10">共有する内容を選んでください。</p><label class="chk-row"><input type="checkbox" id="shareStock" checked class="cbx">
-📦 食材リスト(残量・賞味期限付き)
-</label><label class="chk-row"><input type="checkbox" id="shareShoplist" checked class="cbx">
+<div class="modal-bg" id="addModal"><div class="modal"><h3 id="addTitle">食材を追加</h3><label>食材名</label><input type="text" id="mName"><label>カテゴリ</label><select id="mCat"></select><div class="two-col"><div><label>初期量(数値)</label><input type="number" id="mAmount" value="1" min="0" step="any"></div><div><label>単位</label><select id="mUnit"></select></div></div><label>賞味期限(目安で自動入力・変更可)</label><input type="date" id="mExpiry"><p id="mExpiryHint" class="hint"></p><div class="modal-actions"><button class="sub" onclick="closeAddModal()">キャンセル</button><button class="primary" onclick="confirmAdd()">追加</button></div></div></div><div class="modal-bg" id="useModal"><div class="modal"><h3 id="useTitle">使った量を入力</h3><div id="useCurrent" style="font-size:13px;color:#9a7156;margin-bottom:10px"></div><label>数値で指定</label><div style="display:flex;gap:8px;align-items:center"><input type="number" id="useCustomVal" placeholder="使った量" min="0" step="any" class="fld"><span id="useUnitLabel" style="font-size:14px;color:#8b4513;font-weight:600;min-width:30px"></span></div><p class="hint mt6">例: 玉ねぎ1個使った→1、醤油50ml使った→50</p><div class="modal-actions"><button class="sub" onclick="closeUseModal()">キャンセル</button><button class="primary" onclick="confirmUse()">使った</button></div></div></div><div class="modal-bg" id="shareModal"><div class="modal" style="max-width:400px"><h3>💬 家族にLINE共有</h3><p class="hint mb10">共有したい内容にチェック</p>
+
+<label class="chk-row"><input type="checkbox" id="shareStock" checked onchange="updateSharePreview()" class="cbx">
+📦 今家にある食材
+</label>
+
+<label class="chk-row"><input type="checkbox" id="shareShoplist" checked onchange="updateSharePreview()" class="cbx">
 🛒 買い物リスト
-</label><label class="chk-row"><input type="checkbox" id="sharePlan" checked class="cbx">
-🍳 週間献立
-</label><label class="chk-row"><input type="checkbox" id="shareHistory" class="cbx">
+</label>
+
+<label class="chk-row"><input type="checkbox" id="shareTonight" onchange="updateSharePreview()" class="cbx">
+🍽 今日の夕食
+</label>
+
+<label class="chk-row"><input type="checkbox" id="sharePlan" checked onchange="updateSharePreview()" class="cbx">
+🍳 1週間の献立
+</label>
+
+<div id="planDetailOptions" style="padding:8px 14px 4px;background:#fff8e1;border-radius:8px;margin:6px 0">
+<p class="flabel" style="margin:0 0 4px">献立の内訳を選択</p>
+<label class="chk-row" style="padding:3px 0;border:none"><input type="checkbox" id="shareBreakfast" onchange="updateSharePreview()" class="cbx-sm">朝食</label>
+<label class="chk-row" style="padding:3px 0;border:none"><input type="checkbox" id="shareLunch" onchange="updateSharePreview()" class="cbx-sm">昼食</label>
+<label class="chk-row" style="padding:3px 0;border:none"><input type="checkbox" id="shareDinner" checked onchange="updateSharePreview()" class="cbx-sm">夕食</label>
+</div>
+
+<label class="chk-row"><input type="checkbox" id="shareHistory" onchange="updateSharePreview()" class="cbx">
 📖 今週の調理履歴
-</label><div style="margin-top:14px"><label class="flabel">プレビュー</label><textarea id="sharePreview" readonly rows="10" class="fld" style="font-size:12px;resize:vertical"></textarea></div><div class="modal-actions"><button class="sub" onclick="closeShareModal()">閉じる</button><button class="sub" onclick="updateSharePreview()">🔄 プレビュー更新</button><button class="primary" onclick="copyShareText()">📋 コピー</button></div></div></div><div class="modal-bg" id="exportModal"><div class="modal"><h3>データの書き出し</h3><p class="hint mb10">下のテキストをコピーして、メモアプリやメールに保存してください。</p><textarea id="exportData" readonly rows="10" class="fld mono"></textarea><div class="modal-actions"><button class="sub" onclick="closeExportModal()">閉じる</button><button class="primary" onclick="copyExportData()">📋 コピー</button></div></div></div><div class="modal-bg" id="importModal"><div class="modal"><h3>データの読み込み</h3><p class="hint mb10">書き出したデータ(JSON)を貼り付けてください。</p><textarea id="importData" rows="10" class="fld mono" placeholder="書き出したJSONをここに貼り付け"></textarea><div class="modal-actions"><button class="sub" onclick="closeImportModal()">キャンセル</button><button class="primary" onclick="importData()">読み込む</button></div></div></div><div class="modal-bg" id="planMenuModal"><div class="modal"><h3 id="planMenuTitle">料理</h3><div id="planMenuBody"></div></div></div><div class="modal-bg" id="planRecipeModal"><div class="modal"><h3 id="planRecipeTitle">レシピ</h3><div id="planRecipeBody"></div></div></div><div class="modal-bg" id="receiptModal"><div class="modal"><h3>レシート読み取り結果</h3><p class="hint mb10">登録する項目にチェック、内容を編集して登録してください。</p><div id="receiptItems"></div><div class="modal-actions"><button class="sub" onclick="closeReceiptModal()">キャンセル</button><button class="primary" onclick="confirmReceipt()">チェック分を登録</button></div></div></div><div id="toast"></div><script>
+</label>
+
+<div style="margin-top:14px"><label class="flabel">プレビュー</label><textarea id="sharePreview" readonly rows="8" class="fld" style="font-size:12px;resize:vertical"></textarea></div>
+
+<div class="modal-actions" style="flex-direction:column;gap:8px;margin-top:14px">
+<button class="primary" onclick="shareToLine()" style="background:#06C755;border:none;font-weight:700">💬 LINEで送る</button>
+<button class="sub" onclick="copyShareText()">📋 コピー</button>
+<button class="ghost" onclick="closeShareModal()">閉じる</button>
+</div>
+</div></div><div class="modal-bg" id="exportModal"><div class="modal"><h3>データの書き出し</h3><p class="hint mb10">下のテキストをコピーして、メモアプリやメールに保存してください。</p><textarea id="exportData" readonly rows="10" class="fld mono"></textarea><div class="modal-actions"><button class="sub" onclick="closeExportModal()">閉じる</button><button class="primary" onclick="copyExportData()">📋 コピー</button></div></div></div><div class="modal-bg" id="importModal"><div class="modal"><h3>データの読み込み</h3><p class="hint mb10">書き出したデータ(JSON)を貼り付けてください。</p><textarea id="importData" rows="10" class="fld mono" placeholder="書き出したJSONをここに貼り付け"></textarea><div class="modal-actions"><button class="sub" onclick="closeImportModal()">キャンセル</button><button class="primary" onclick="importData()">読み込む</button></div></div></div><div class="modal-bg" id="planMenuModal"><div class="modal"><h3 id="planMenuTitle">料理</h3><div id="planMenuBody"></div></div></div><div class="modal-bg" id="planRecipeModal"><div class="modal"><h3 id="planRecipeTitle">レシピ</h3><div id="planRecipeBody"></div></div></div><div class="modal-bg" id="receiptModal"><div class="modal"><h3>レシート読み取り結果</h3><p class="hint mb10">登録する項目にチェック、内容を編集して登録してください。</p><div id="receiptItems"></div><div class="modal-actions"><button class="sub" onclick="closeReceiptModal()">キャンセル</button><button class="primary" onclick="confirmReceipt()">チェック分を登録</button></div></div></div><div id="toast"></div><script>
 const PRESETS = {
 "野菜": {items:[["玉ねぎ",30],["人参",21],["じゃがいも",30],["さつまいも",14],["里芋",14],["ごぼう",14],["れんこん",10],["キャベツ",14],["白菜",10],["大根",14],["きゅうり",7],["トマト",7],["ミニトマト",7],["ピーマン",10],["なす",7],["ズッキーニ",7],["オクラ",4],["アスパラガス",4],["セロリ",7],["枝豆",3],["ほうれん草",4],["小松菜",4],["レタス",5],["もやし",3],["ブロッコリー",5],["しめじ",5],["えのき",5],["しいたけ",5],["にんにく",30],["生姜",21],["長ねぎ",10],["ニラ",4],["かぼちゃ",30]],unit:"個",shelf:7},
 "肉・魚": {items:[["鶏もも肉",3],["鶏むね肉",3],["ささみ",2],["鶏手羽元",3],["鶏手羽先",3],["豚バラ",3],["豚ロース",3],["豚こま",3],["豚ひき肉",2],["牛肉",3],["合いびき肉",2],["ウインナー",14],["ベーコン",14],["ハム",7],["鮭",2],["サーモン",2],["まぐろ",2],["さば",2],["ぶり",2],["たら",2],["いか",2],["えび",2],["ツナ缶",730],["さば缶",730]],unit:"g",shelf:3},
@@ -1389,6 +1417,7 @@ const now = new Date();
 const dateStr = `${now.getMonth()+1}/${now.getDate()} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
 let text = `🍲 うちのキッチン(${dateStr})\n`;
 const today = new Date();today.setHours(0,0,0,0);
+
 if(document.getElementById("shareStock").checked && state.stock.length>0){
 text += "\n📦 食材\n";
 const sorted = [...state.stock].sort((a,b)=>{
@@ -1409,29 +1438,47 @@ else if(days<=5)line += `(あと${days}日)`;
 text += line+"\n";
 });
 }
+
 if(document.getElementById("shareShoplist").checked && state.shoplist.length>0){
 text += "\n🛒 買い物リスト\n";
 state.shoplist.forEach(s=>{
 text += `${s.checked?"☑":"☐"} ${s.name}${s.qty?" "+s.qty:""}\n`;
 });
 }
+
+// 今日の夕食だけ
+if(document.getElementById("shareTonight").checked){
+const todayKey = today.toISOString().split("T")[0];
+const p = state.mealPlan[todayKey];
+if(p && p.dinner && p.dinner.name){
+text += `\n🍽 今日の夕食\n・${p.dinner.name}${p.dinner.status==="confirmed"?" ✓":""}\n`;
+} else {
+text += "\n🍽 今日の夕食\n(未決定)\n";
+}
+}
+
+// 1週間の献立（朝/昼/夕の選択考慮）
 if(document.getElementById("sharePlan").checked){
 const keys = Object.keys(state.mealPlan).filter(k=>!k.startsWith("_")).sort();
-if(keys.length>0){
-text += "\n🍳 献立\n";
+const showB = document.getElementById("shareBreakfast").checked;
+const showL = document.getElementById("shareLunch").checked;
+const showD = document.getElementById("shareDinner").checked;
+if(keys.length>0 && (showB || showL || showD)){
+text += "\n🍳 1週間の献立\n";
 const dayLabels = ["日","月","火","水","木","金","土"];
 keys.forEach(k=>{
 const p = state.mealPlan[k];
 const d = new Date(k);
 const md = `${d.getMonth()+1}/${d.getDate()}(${dayLabels[d.getDay()]})`;
 const items = [];
-if(p.breakfast&&p.breakfast.name)items.push(`朝:${p.breakfast.name}${p.breakfast.status==="confirmed"?"✓":""}`);
-if(p.lunch&&p.lunch.name)items.push(`昼:${p.lunch.name}${p.lunch.status==="confirmed"?"✓":""}`);
-if(p.dinner&&p.dinner.name)items.push(`夕:${p.dinner.name}${p.dinner.status==="confirmed"?"✓":""}`);
+if(showB && p.breakfast&&p.breakfast.name)items.push(`朝:${p.breakfast.name}${p.breakfast.status==="confirmed"?"✓":""}`);
+if(showL && p.lunch&&p.lunch.name)items.push(`昼:${p.lunch.name}${p.lunch.status==="confirmed"?"✓":""}`);
+if(showD && p.dinner&&p.dinner.name)items.push(`夕:${p.dinner.name}${p.dinner.status==="confirmed"?"✓":""}`);
 if(items.length>0)text += `${md} ${items.join(" / ")}\n`;
 });
 }
 }
+
 if(document.getElementById("shareHistory").checked){
 const weekAgo = Date.now() - 7*86400000;
 const recent = state.history.filter(h=>h.date>=weekAgo);
@@ -1443,8 +1490,17 @@ text += `${d.getMonth()+1}/${d.getDate()} ${h.name}\n`;
 });
 }
 }
+
 if(text.split("\n").length<=2)text += "\n(共有する内容がありません)";
 return text;
+}
+
+// LINEで直接送信
+function shareToLine(){
+const text = generateShareText();
+const encoded = encodeURIComponent(text);
+// LINE Share URL
+window.open(`https://line.me/R/share?text=${encoded}`, "_blank");
 }
 function copyShareText(){
 updateSharePreview();
