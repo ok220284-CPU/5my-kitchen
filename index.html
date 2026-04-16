@@ -2141,6 +2141,7 @@ function renderSeasonalSection() {
 
   let html = `<div class="card"><h2><span class="ic">🌿</span>${monthNames[month]}の旬＆お買い得情報</h2>`;
   html += `<p class="hint mb8">${data.tips}</p>`;
+  html += `<div style="font-size:11px;color:#9a7156;margin-bottom:8px;padding:6px 10px;background:#fff8e8;border-radius:8px;line-height:1.6"><span class="seasonal-tag have" style="padding:2px 8px;font-size:11px;display:inline-block;margin-right:4px;vertical-align:middle">緑</span>＝登録済み食材、タップで「レシピ/買い物リスト」を選べます</div>`;
 
   // 旬の野菜
   html += `<div class="seasonal-cat"><div class="flabel">🥬 旬の野菜（お買い得！）</div><div class="seasonal-tags">`;
