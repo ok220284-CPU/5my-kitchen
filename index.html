@@ -2222,11 +2222,20 @@ async function suggestSeasonalRecipes() {
   if(!data) return;
   const seasonal = [...data.veg, ...data.fish].slice(0, 8).join('、');
 
-  // 内蔵DBから旬食材マッチ
+  // 旬食材の正規化（「新玉ねぎ」→「玉ねぎ」等）
+  const normalize = (s) => s.replace(/^(新|春|秋)/,'').replace(/じゃがいも/,'じゃが').replace(/じゃが/,'じゃが');
+  const seasonalIngs = [...data.veg,...data.fish,...data.fruit];
+  const seasonalNorm = seasonalIngs.map(normalize);
+
+  // 内蔵DBから旬食材マッチ（柔軟なマッチング）
   const results = RECIPE_DB.map(r => {
     let seasonalMatch = 0;
     r.ings.forEach(i => {
-      if([...data.veg,...data.fish,...data.fruit].some(s => i.n.includes(s) || s.includes(i.n))) seasonalMatch++;
+      const ingN = normalize(i.n);
+      // オリジナル or 正規化で一致
+      const matched = seasonalIngs.some(s => i.n.includes(s) || s.includes(i.n)) ||
+                      seasonalNorm.some(s => ingN.includes(s) || s.includes(ingN));
+      if(matched) seasonalMatch++;
     });
     const stockNames = state.stock.map(s => s.name);
     let stockMatch = 0;
@@ -2236,7 +2245,7 @@ async function suggestSeasonalRecipes() {
     return {...r, seasonalMatch, matchRate: Math.round((stockMatch/r.ings.length)*100), matchCount: stockMatch, totalIngs: r.ings.length};
   }).filter(r => r.seasonalMatch > 0)
     .sort((a,b) => b.seasonalMatch - a.seasonalMatch || b.matchRate - a.matchRate)
-    .slice(0, 6);
+    .slice(0, 8);
 
   lastOfflineResults = results;
   const resultEl = document.getElementById('seasonalRecipeResult');
