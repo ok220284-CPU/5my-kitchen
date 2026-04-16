@@ -2141,6 +2141,7 @@ function renderSeasonalSection() {
 
   // 旬食材でレシピ提案ボタン
   html += `<button class="primary mt10" onclick="suggestSeasonalRecipes()">🌿 旬の食材でレシピ提案</button>`;
+  html += `<div id="seasonalRecipeResult" class="mt10"></div>`;
 
   html += `</div>`;
   el.innerHTML = html;
