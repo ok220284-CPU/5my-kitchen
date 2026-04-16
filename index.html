@@ -53,6 +53,23 @@ button.ghost:active{opacity:.4 !important;background:#fff3ec !important}
 /* 全ボタン共通：押下時の即座フィードバック */
 button{transition:all .08s ease-out !important}
 button:active{filter:brightness(.95)}
+
+.seasonal-cat{margin-top:10px}
+.seasonal-cat .flabel{margin-bottom:6px;font-weight:700;font-size:13px;color:#8b4513}
+.seasonal-tags{display:flex;flex-wrap:wrap;align-items:center;gap:2px 0;margin-bottom:8px;line-height:2}
+.seasonal-tag{display:inline-block;padding:6px 12px;background:#fff3ec;border:1.5px solid #ffccb3;color:#8b4513;border-radius:16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.seasonal-tag.have{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+.seasonal-tag.fruit{background:#fce4ec;border-color:#f8bbd0;color:#c2185b}
+.seasonal-tag.fruit.have{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+.seasonal-tag.fish{background:#e3f2fd;border-color:#90caf9;color:#1565c0}
+.seasonal-tag.fish.have{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+.saving-tip{background:linear-gradient(135deg,#fff8e1,#ffecb3);color:#f57c00;padding:10px 14px;border-radius:10px;font-size:13px;margin-top:12px;line-height:1.5;font-weight:600}
+.price-section{margin-top:12px}
+.price-item{padding:10px;margin-bottom:6px;border-radius:8px;font-size:12px;line-height:1.5}
+.price-item.up{background:#ffebee;border-left:3px solid #d32f2f;color:#c62828}
+.price-item.down{background:#e8f5e9;border-left:3px solid #388e3c;color:#2e7d32}
+.price-advice{color:#8b4513;font-size:11px}
+.sep{display:inline-block;width:6px}
 </style></head><body><header><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><h1>🍲 うちのキッチン</h1><div class="sub">家の食材から、今日の一品を</div></div><button onclick="quickSuggest()" class="omakase-btn">🎲 おまかせ</button></div></header><div id="alertBanner"></div>
 <div id="tipsBanner" style="display:none"></div><nav class="tabs"><button data-tab="stock" class="active"><span class="ic">📦</span>食材</button><button data-tab="cook"><span class="ic">🍳</span>料理</button><button data-tab="shop"><span class="ic">🛒</span>買い物</button><button data-tab="fav"><span class="ic">⭐</span>お気に入り</button><button data-tab="set"><span class="ic">⚙️</span>設定</button></nav><main><section id="tab-stock"><div id="noStockToggle" style="background:#fff3ec;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
 <div style="font-size:13px;font-weight:600;color:#8b4513">🍽 食材なしで使う</div>
