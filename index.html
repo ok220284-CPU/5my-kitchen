@@ -1704,13 +1704,7 @@ function showMoodPicker() {
     {key:'さっぱり', icon:'🥗', color:'#e8f5e8'},
     {key:'こってり', icon:'🍖', color:'#fff3e0'},
     {key:'ピリ辛', icon:'🌶', color:'#ffebee'},
-    {key:'あったかい', icon:'🍲', color:'#fff8e1'},
-    {key:'がっつり', icon:'💪', color:'#fce4ec'},
-    {key:'時短パパッと', icon:'⚡', color:'#e3f2fd'},
-    {key:'ヘルシー', icon:'🥬', color:'#e8f5e8'},
-    {key:'和食の気分', icon:'🍱', color:'#fff3ec'},
-    {key:'洋食の気分', icon:'🍝', color:'#fef6ef'},
-    {key:'中華の気分', icon:'🥟', color:'#fff8e1'}
+    {key:'あったかい', icon:'🍲', color:'#fff8e1'}
   ];
   el.innerHTML = '<div class="mood-grid">' +
     moods.map(m => `<button class="mood-btn" style="background:${m.color}" onclick="searchByMoodClick('${m.key}')">${m.icon}<br><span>${m.key}</span></button>`).join('') +
